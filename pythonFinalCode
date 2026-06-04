@@ -1,0 +1,81 @@
+import time
+import board
+import adafruit_sht4x
+import adafruit_veml7700
+import requests
+import pandas as pd
+from datetime import datetime
+import pypyodbc as odbc
+
+# Initialize I2C and sensors
+i2c = board.I2C()
+sensor_Temp = adafruit_sht4x.SHT4x(i2c)
+sensor_Light = adafruit_veml7700.VEML7700(i2c)
+
+# Create DataFrame
+columns = ["Lux", "Temperature", "Humidity", "Time_Stamp"]
+df = pd.DataFrame(columns=columns)
+
+URL = "http://jdbc:mariadb://localhost:3306/bob" 
+try:
+    while True:
+        
+        # Define your connection parameters
+        
+        server = 'bob'  
+        database = 'bob' 
+        username = 'userbob' 
+        password = 'password'
+        
+        conn_str = f'Driver={{SQL Server}};Server={server};Database={database};Uid={username};Pwd={password};'
+        
+        
+        # Read sensors
+        temperature, humidity = sensor_Temp.measurements
+        light = sensor_Light.lux
+
+        # Print values
+        print(f"Temperature: {temperature:.2f} °C")
+        print(f"Humidity: {humidity:.2f} %")
+        print(f"Lux: {light:.2f}")
+        print("-" * 30)
+
+        # Add to DataFrame
+        new_row = {
+            "Lux": light,
+            "Temperature": temperature,
+            "Humidity": humidity,
+            "Time_Stamp": datetime.now().isoformat()
+        }
+        df.loc[len(df)] = new_row
+
+        # OPTIONAL: save latest row to CSV (backup)
+        df.tail(1).to_csv("sensor_data.csv", mode='a', header=not pd.io.common.file_exists("sensor_data.csv"), index=False)
+
+        # Send in batches of 5
+        if len(df) >= 1:
+            payload = df.to_dict(orient="records")
+            try:
+                response = requests.post(URL, json=payload)
+                print("Sent batch:", response.status_code)
+                df = df.iloc[0:0]  # clear DataFrame after sending
+            except Exception as e:
+                print("Upload failed:", e)
+
+        time.sleep(1)
+
+except KeyboardInterrupt:
+    print("Exiting program")
+
+
+#Collecting pyodbc
+  Downloading pyodbc-5.3.0-cp313-cp313-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl.metadata (2.7 kB)
+Downloading pyodbc-5.3.0-cp313-cp313-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl (343 kB)
+Installing collected packages: pyodbc
+Successfully installed pyodbc-5.3.0
+(.venv) pi@raspberrypi:~/automation-hat $ /home/pi/automation-hat/.venv/bin/python /home/pi/automation-hat/Python/FinalProject_231.py
+Traceback (most recent call last):
+  File "/home/pi/automation-hat/Python/FinalProject_231.py", line 78, in <module>
+    import pyodbc as odbc
+ImportError: libodbc.so.2: cannot open shared object file: No such file or directory
+(.venv) pi@raspberrypi:~/automation-hat $ ^C

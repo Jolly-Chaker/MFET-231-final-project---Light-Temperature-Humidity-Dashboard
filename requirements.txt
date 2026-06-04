@@ -1,0 +1,6 @@
+adafruit-blinka
+adafruit-circuitpython-sht4x
+adafruit-circuitpython-veml7700
+pandas
+mysql-connector-python
+requests

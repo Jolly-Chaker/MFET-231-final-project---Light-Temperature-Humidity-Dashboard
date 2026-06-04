@@ -1,0 +1,13 @@
+Install python on pi
+make sure igniton is installed and set up aswell
+install the packages needed to read the sensors (see txt file)
+set up connection to igniton over OPCUa (designer adn dashboard connected to gateway which is pi) 
+plug in sensors to correct pins (i2C) and use bread board to run the 2 in parallel so we can run them on the same pi 
+set up pyhton code assignining varibles to each sensor over i2c and this program sets sampling rate and stores sample in table
+the python code in Vscode is connected to a database from tabel to store values to be sent to dashbaord 
+in igniton make a DB in sql format (THIS TAKES ON VALUES SAMPLED IN VS) and IS linked to designer and to be linked to the pyhton program 
+ON Desginer made 3 charts and assigned values to tagss/tag path to match sensor valuebs from database 
+
+database: Final_DB231 
+Server: Final_SV231
+

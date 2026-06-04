@@ -1,0 +1,12 @@
+sudo apt update
+sudo apt install -y python3-pip python3-smbus i2c-tools
+pip3 install --break-system-packages adafruit-blinka adafruit-circuitpython-veml7700
+i2cdetect -y 1
+
+
+python3 /home/dom/Documents/lightsensor.py
+
+
+
+#used to get the pi to read the inputs on the I2c port 
+#in terminal 

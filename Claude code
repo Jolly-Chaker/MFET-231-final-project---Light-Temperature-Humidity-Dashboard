@@ -1,0 +1,101 @@
+import time
+import board
+import adafruit_sht4x
+import adafruit_veml7700
+import pandas as pd
+from datetime import datetime
+import mysql.connector  # pip install mysql-connector-python
+
+# Initialize I2C and sensors
+i2c = board.I2C()
+sensor_Temp = adafruit_sht4x.SHT4x(i2c)
+sensor_Light = adafruit_veml7700.VEML7700(i2c)
+
+# Create DataFrame
+columns = ["Lux", "Temperature", "Humidity", "Time_Stamp"]
+df = pd.DataFrame(columns=columns)
+
+# --- DB Connection (outside the loop — connect once!) ---
+conn = mysql.connector.connect(
+    host="localhost",       # or your MariaDB server IP
+    port=3306,
+    database="bob",         # your database name
+    user="userbob",
+    password="password"
+)
+cursor = conn.cursor()
+
+# Create table if it doesn't exist
+cursor.execute("""
+    CREATE TABLE IF NOT EXISTS sensor_data (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        Lux FLOAT,
+        Temperature FLOAT,
+        Humidity FLOAT,
+        Time_Stamp DATETIME
+    )
+""")
+conn.commit()
+
+print("Connected to MariaDB successfully!")
+
+try:
+    while True:
+        # Read sensors
+        temperature, humidity = sensor_Temp.measurements
+        light = sensor_Light.lux
+
+        # Print values
+        print(f"Temperature: {temperature:.2f} °C")
+        print(f"Humidity: {humidity:.2f} %")
+        print(f"Lux: {light:.2f}")
+        print("-" * 30)
+
+        # Add to DataFrame
+        timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        new_row = {
+            "Lux": light,
+            "Temperature": temperature,
+            "Humidity": humidity,
+            "Time_Stamp": timestamp
+        }
+        df.loc[len(df)] = new_row
+
+        # OPTIONAL: save to CSV as backup
+        df.tail(1).to_csv(
+            "sensor_data.csv",
+            mode='a',
+            header=not pd.io.common.file_exists("sensor_data.csv"),
+            index=False
+        )
+
+        # Insert into MariaDB in batches of 5
+        if len(df) >= 5:
+            try:
+                insert_query = """
+                    INSERT INTO sensor_data (Lux, Temperature, Humidity, Time_Stamp)
+                    VALUES (%s, %s, %s, %s)
+                """
+                rows = [
+                    (row["Lux"], row["Temperature"], row["Humidity"], row["Time_Stamp"])
+                    for _, row in df.iterrows()
+                ]
+                cursor.executemany(insert_query, rows)
+                conn.commit()
+                print(f"Inserted {len(rows)} rows into MariaDB")
+                df = df.iloc[0:0]  # clear DataFrame after inserting
+
+            except mysql.connector.Error as e:
+                print("DB insert failed:", e)
+                conn.rollback()
+
+        time.sleep(1)
+
+except KeyboardInterrupt:
+    print("Exiting program")
+
+finally:
+    # Always clean up the connection
+    cursor.close()
+    conn.close()
+    print("Database connection closed.")
