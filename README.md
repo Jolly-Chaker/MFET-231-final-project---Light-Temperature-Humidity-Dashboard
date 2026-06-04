@@ -6,7 +6,7 @@
 
 ## Hardware Components
 * **Computing:** 1 x Raspberry Pi 4 Model B 4GB
-* **Sensors:** * 1 x Adafruit SHT45 (Temperature & Humidity) and 1 x Luminosity Sensor (I2C interface)
+* **Sensors:** * 1 x Adafruit SHT45 (Temperature & Humidity) and 1 x Adafruit TSL2561 (Luminosity Sensor) (I2C interface)
 * **Prototyping:** 1 x Breadboard & Jumper Wire set
 * **Software:** * **Database:** MySQL Server (`Final_SV231`)
     * **IDE:** VS Code
