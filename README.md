@@ -5,10 +5,9 @@
 ---
 
 ## Hardware Components
-* **Computing:** 1x Raspberry Pi 4B
-* **Sensors:** * 1x DHT22 (Temperature & Humidity)
-    * 1x Luminosity Sensor (I2C interface)
-* **Prototyping:** 1x Breadboard & Jumper Wire set
+* **Computing:** 1 x Raspberry Pi 4 Model B 4GB
+* **Sensors:** * 1 x Adafruit SHT45 (Temperature & Humidity) and 1 x Luminosity Sensor (I2C interface)
+* **Prototyping:** 1 x Breadboard & Jumper Wire set
 * **Software:** * **Database:** MySQL Server (`Final_SV231`)
     * **IDE:** VS Code
     * **HMI/SCADA:** Ignition Gateway
