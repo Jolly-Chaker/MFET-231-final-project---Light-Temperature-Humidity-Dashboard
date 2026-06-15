@@ -25,7 +25,7 @@
 ## Digital & Software Procedures
 
 ### Phase A: Data Acquisition (Python Layer)
-1. **Environment Setup:** * Install Python 3 and required libraries: `mysql-connector-python`, `opcua`, and sensor drivers via `pip`.
+1. **Environment Setup:** Install Python 3 and required libraries: `mysql-connector-python`, `opcua`, and sensor drivers via `pip`.
 2. **Python Logic (VS Code):**
    * **Polling:** The script initializes the I2C bus and polls sensors at a defined sampling rate.
    * **Variables:** Data is assigned to local Python variables (Temp, Hum, Lux).
