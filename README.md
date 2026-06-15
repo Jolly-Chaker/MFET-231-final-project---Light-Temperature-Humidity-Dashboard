@@ -13,7 +13,7 @@
 ---
 
 ## Physical Setup Procedures
-### 1. Wiring & Integration
+### Wiring & Integration
 * **I2C Parallel Configuration:** Both sensors are wired in parallel on the breadboard to communicate over the same I2C bus.
     * **SDA (Data):** Connected to GPIO 2 (Pin 3).
     * **SCL (Clock):** Connected to GPIO 3 (Pin 5).
