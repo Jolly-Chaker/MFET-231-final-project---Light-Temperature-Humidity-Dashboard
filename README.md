@@ -1,6 +1,6 @@
 # MFET 231: Integrated Condition Monitoring System
   
-**Systems:** Raspberry Pi, Python, MySQL, OPC-UA, Ignition SCADA
+**Tools:** Raspberry Pi, Python, MySQL, OPC-UA, Ignition SCADA
 
 ---
 
