@@ -32,7 +32,7 @@
    * **Local Storage:** The script establishes a connection to the MySQL database `Final_DB231` and executes `INSERT` queries to log timestamps and values.
 
 ### Phase B: Communication (OPC-UA Conduit)
-1. **Server Configuration:** * A Python-based **OPC-UA Server** is hosted on the Raspberry Pi (Port 4840).
+1. **Server Configuration:** A Python-based **OPC-UA Server** is hosted on the Raspberry Pi (Port 4840).
 2. **Data Mapping:**
    * Sensor variables are mapped to OPC-UA nodes. This allows external clients (Ignition) to browse and "subscribe" to real-time data streams.
 
